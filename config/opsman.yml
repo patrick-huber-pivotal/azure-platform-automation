@@ -1,0 +1,43 @@
+opsman-configuration:
+  azure:
+    tenant_id: 29248f74-371f-4db2-9a50-c62a6877a0c1
+    subscription_id: e1dd1257-8f9a-4cde-8aa3-91ff3e19b874
+    client_id: 775fa595-9dc6-4cb4-b039-30582d9e52ac
+    client_secret: ((azure_client_secret))
+    location: eastus
+    resource_group: dell
+    storage_account: o69cx5dfz96fu2rpu431                       # account name of container
+    ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWL+lb+3omffcvR1mnWAeFJcApy3Ci6SUh7q1/77aCVC9FUr/i974fMxx/578KQgx9OxrUWhkVPvaJidheak/yG6LDvIPd+aSTTWzW7RAS2p0Vf8/1paEtTRxJ2E8JN9A27N+YzNGdCTmchfaII/YuHkrx8DOj9KW5BrikUBDbx1MR3YRa1lLV8WlYnvHqECNRigjh5wsyE74DC/Y9cBQrKftC90ymtmpFFnUJGpMRMfqWdKWoCRceqn2JtDQEfHOHzicC91ctmuQwAHAOUd/CAkvK3dFjWXTMU6mzqL5Sf+K3lHir+u/eFq+zZoIa+gSczCjc33uSzW1y7QIFvjWTwIw7XKCrqISSYknTjrj416NQTrtA2fc7XU7HhcDf6+GaZ8Scnj5yzYLJBroJobsuILUJ7gJjOfA1g+y6qX+10JVRJ/82jDhdODp2FrCgvFR/UN771UgtQLnAlvgqcy7wEPs5VsWhAgsxyQ7eg0Ng4ihIOR7/pbWBPIpy2oFIrJJZ3lCNMHgxq2u5hvEiPZm/27xWaYjLa8qGZRfqcI1e7sWlwiq6DBJv6nSvGjlZ0cOa71MAVNNc7OHtsQFnBQtAxT3Kx75sqQ+lXoPhoy4uMmwXHJdZhipImaqr61wvi+dzxcL36n+ly842bmjSseXPM2GvIEKdI0mR7G1gbaCaRQ==  # ssh key to access VM
+
+    # Note that there are several environment-specific details in this path
+    # This path can reach out to other resource groups if necessary
+    subnet_id: /subscriptions/e1dd1257-8f9a-4cde-8aa3-91ff3e19b874/resourceGroups/dell/providers/Microsoft.Network/virtualNetworks/dell-virtual-network/subnets/dell-infrastructure-subnet
+
+    # At least one IP address (public or private) needs to be assigned
+    # to the VM. It is also permissible to assign both.
+    private_ip: 10.0.8.10
+    public_ip: 13.82.175.26
+
+    # Optional
+    # cloud_name: AzureCloud          # default - AzureCloud
+    # storage_key: ((storage-key))    # only required if your client does not
+                                      # have the needed storage permissions
+    # container: opsmanagerimage      # storage account container name
+                                      # default - opsmanagerimage
+    # network_security_group: ops-manager-security-group
+    vm_name: dell-ops-manager-vm      # default - OpsManager-vm
+    # boot_disk_size: 200             # default - 200 (GB)
+    # use_managed_disk: true          # this flag is only respected by the
+                                      # create-vm and upgrade-opsman commands.
+                                      # set to false if you want to create
+                                      # the new opsman VM with an unmanaged
+                                      # disk (not recommended). default - true
+    # storage_sku: Premium_LRS        # this sets the SKU of the storage account
+                                      # for the disk
+                                      # Allowed values: Standard_LRS, Premium_LRS,
+                                      # StandardSSD_LRS, UltraSSD_LRS
+    # vm_size: Standard_DS1_v2        # the size of the Ops Manager VM
+                                      # default - Standard_DS2_v2
+                                      # Allowed values: https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes-general
+    # vpc_subnet: /subscriptions/...  # DEPRECATED - use subnet_id
+    # use_unmanaged_disk: false       # DEPRECATED - use use_managed_disk
