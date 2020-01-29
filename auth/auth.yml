@@ -1,7 +1,3 @@
-target: https://opsman.dell.azure.pivotal.rocks
-connect-timeout: 30            # default 5
-request-timeout: 1800          # default 1800
-skip-ssl-validation: false     # default false
 username: ((om_username))
 password: ((om_password))
 # decryption-passphrase is optional,
