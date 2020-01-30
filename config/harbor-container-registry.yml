@@ -1,0 +1,78 @@
+product-name: harbor-container-registry
+product-properties:
+  .properties.admin_password:
+    value:
+      secret: ((properties_admin_password.secret))
+  .properties.admin_password_for_smoketest:
+    value:
+      secret: ((properties_admin_password_for_smoketest.secret))
+  .properties.auth_mode:
+    selected_option: db_auth
+    value: db_auth
+  .properties.clair_updater_interval:
+    value: 0
+  .properties.customize_container_network:
+    selected_option: default
+    value: default
+  .properties.hostname:
+    value: harbor.pks.dell.azure.pivotal.rocks
+  .properties.initial_delay_minutes:
+    value: 60
+  .properties.log_insight:
+    selected_option: disabled
+    value: disabled
+  .properties.no_proxy:
+    value: 127.0.0.1,localhost,.local,.internal,log,db,redis,nginx,core,portal,postgresql,jobservice,registry,registryctl,clair-adapter,chartmuseum,notary-server
+  .properties.registry_storage:
+    selected_option: filesystem
+    value: filesystem
+  .properties.server_cert_key:
+    value:
+      cert_pem: ((properties_server_cert_key.cert_pem))
+      private_key_pem: ((properties_server_cert_key.private_key_pem))
+  .properties.vm_monitor:
+    selected_option: no_monitor
+    value: no_monitor
+  .properties.with_clair:
+    value: true
+  .properties.with_notary:
+    value: true
+network-properties:
+  network:
+    name: services
+  other_availability_zones:
+  - name: zone-1
+  - name: zone-2
+  - name: zone-3
+  singleton_availability_zone:
+    name: zone-1
+resource-config:
+  harbor-app:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    elb_names:
+    - dell-harbor-lb
+    instance_type:
+      id: automatic
+    instances: automatic
+    internet_connected: false
+    persistent_disk:
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  smoke-testing:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    elb_names: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    internet_connected: false
+    swap_as_percent_of_memory_size: automatic
+errand-config:
+  smoke-testing:
+    post-deploy-state: when-changed
+  uaa-deregistration:
+    pre-delete-state: false
+
