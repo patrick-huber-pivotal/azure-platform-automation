@@ -1,3 +1,17 @@
+errand-config:
+  smoke-testing:
+    post-deploy-state: when-changed
+  uaa-deregistration:
+    pre-delete-state: false
+network-properties:
+  network:
+    name: services
+  other_availability_zones:
+  - name: zone-1
+  - name: zone-2
+  - name: zone-3
+  singleton_availability_zone:
+    name: zone-1
 product-name: harbor-container-registry
 product-properties:
   .properties.admin_password:
@@ -37,18 +51,8 @@ product-properties:
     value: true
   .properties.with_notary:
     value: true
-network-properties:
-  network:
-    name: services
-  other_availability_zones:
-  - name: zone-1
-  - name: zone-2
-  - name: zone-3
-  singleton_availability_zone:
-    name: zone-1
 resource-config:
   harbor-app:
-    max_in_flight: 1
     additional_networks: []
     additional_vm_extensions: []
     elb_names:
@@ -57,11 +61,11 @@ resource-config:
       id: automatic
     instances: automatic
     internet_connected: false
+    max_in_flight: 1
     persistent_disk:
       size_mb: automatic
     swap_as_percent_of_memory_size: automatic
   smoke-testing:
-    max_in_flight: 1
     additional_networks: []
     additional_vm_extensions: []
     elb_names: []
@@ -69,10 +73,5 @@ resource-config:
       id: automatic
     instances: automatic
     internet_connected: false
+    max_in_flight: 1
     swap_as_percent_of_memory_size: automatic
-errand-config:
-  smoke-testing:
-    post-deploy-state: when-changed
-  uaa-deregistration:
-    pre-delete-state: false
-

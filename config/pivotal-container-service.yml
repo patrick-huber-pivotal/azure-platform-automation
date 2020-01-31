@@ -1,3 +1,27 @@
+errand-config:
+  delete-all-clusters:
+    pre-delete-state: true
+  pks-nsx-t-precheck:
+    post-deploy-state: false
+  smoke-tests:
+    post-deploy-state: false
+  upgrade-all-service-instances:
+    post-deploy-state: true
+  wavefront-alert-creation:
+    post-deploy-state: false
+  wavefront-alert-deletion:
+    pre-delete-state: false
+network-properties:
+  network:
+    name: pks
+  other_availability_zones:
+  - name: zone-1
+  - name: zone-2
+  - name: zone-3
+  service_network:
+    name: pks-services
+  singleton_availability_zone:
+    name: zone-1
 product-name: pivotal-container-service
 product-properties:
   .pivotal-container-service.pks_tls:
@@ -180,20 +204,8 @@ product-properties:
     value: disabled
   .properties.worker_max_in_flight:
     value: 4
-network-properties:
-  network:
-    name: pks
-  other_availability_zones:
-  - name: zone-1
-  - name: zone-2
-  - name: zone-3
-  service_network:
-    name: pks-services
-  singleton_availability_zone:
-    name: zone-1
 resource-config:
   pivotal-container-service:
-    max_in_flight: 1
     additional_networks: []
     additional_vm_extensions: []
     elb_names:
@@ -202,20 +214,7 @@ resource-config:
       id: automatic
     instances: automatic
     internet_connected: false
+    max_in_flight: 1
     persistent_disk:
       size_mb: automatic
     swap_as_percent_of_memory_size: automatic
-errand-config:
-  delete-all-clusters:
-    pre-delete-state: true
-  pks-nsx-t-precheck:
-    post-deploy-state: false
-  smoke-tests:
-    post-deploy-state: false
-  upgrade-all-service-instances:
-    post-deploy-state: true
-  wavefront-alert-creation:
-    post-deploy-state: false
-  wavefront-alert-deletion:
-    pre-delete-state: false
-

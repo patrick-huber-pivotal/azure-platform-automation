@@ -8,9 +8,35 @@ for PRODUCT in $PRODUCTS
 do
     echo "setting credentials for $PRODUCT"
     ymldiff -f json $ROOT/config/$PRODUCT-nocreds.yml $ROOT/config/$PRODUCT-creds.yml |
-    jq '[.Differences[] | { placeholder: (if (.Path | length) > 2 then .Path[1]+"_"+.Path[3]+"_"+.Path[4] else .Path[1] end) , credential: (if (.Path | length) > 2 then .To else .To.value end) } | .]' | \
-    jq '[.[] | { placeholder: (.placeholder | split(".") | .[1]+"_"+.[2]), credential: .credential }]' | \
-    jq '.[] | "credhub set -n /concourse/main/"+ .placeholder + " --type json --value " + (.credential | tostring | @sh )' -r > /tmp/script.sh
+    jq '
+    [  
+       .Differences[] 
+       | { 
+           placeholder: (
+             if (.Path | length) > 4 then
+               .Path[1]+"_"+.Path[3]+"_"+.Path[4] 
+             else 
+               .Path[1] 
+             end) , 
+           credential: (
+             if (.Path | length) > 2 then
+               .To 
+             else 
+               .To.value 
+             end) } 
+       | .
+    ]' | \
+    jq '
+    [
+      .[] 
+      | { 
+          placeholder: (.placeholder | split(".") | .[1:] | join("_") ), 
+          credential: .credential }
+    ]' | \
+    jq '
+    .[] 
+    | "credhub set -n /concourse/main/"+ .placeholder + " --type json --value " + (.credential | tostring | @sh )' \
+      -r > /tmp/script.sh
     chmod +x /tmp/script.sh
     source /tmp/script.sh 
     rm /tmp/script.sh 

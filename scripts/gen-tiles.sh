@@ -19,4 +19,14 @@ do
 
    echo "waiting for $product exports to complete"
    wait 
+
+
+   DIFF=$(diff $ROOT/config/$product.yml $ROOT/config/$product-creds.yml)
+   if [ "$DIFF" == "" ]; then
+     echo "no credentials found for $product, skipping"
+     continue 
+   fi
+   echo "removing empty placeholders"
+   bosh int $ROOT/config/$product.yml -o <(ymldiff $ROOT/config/$product.yml $ROOT/config/$product-creds.yml | yq r - -j | jq '[.[] | select(.type=="remove")]' | yq r -) > config/$product-temp.yml
+   mv $ROOT/config/$product-temp.yml $ROOT/config/$product.yml
 done
