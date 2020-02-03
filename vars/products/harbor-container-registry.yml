@@ -1,0 +1,5 @@
+---
+pivnet-api-token: ((pivnet-token)) 
+pivnet-file-glob: "harbor-container-registry-*.pivotal"
+pivnet-product-slug: harbor-container-registry
+product-version-regex: ^1\.9\..*$
