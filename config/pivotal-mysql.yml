@@ -1,3 +1,25 @@
+errand-config:
+  delete-all-service-instances-and-deregister-broker:
+    pre-delete-state: true
+  register-broker:
+    post-deploy-state: true
+  smoke-tests:
+    post-deploy-state: true
+  upgrade-all-service-instances:
+    post-deploy-state: true
+  validate-before-upgrade-instances:
+    post-deploy-state: true
+network-properties:
+  network:
+    name: services
+  other_availability_zones:
+  - name: zone-1
+  - name: zone-2
+  - name: zone-3
+  service_network:
+    name: services
+  singleton_availability_zone:
+    name: zone-1
 product-name: pivotal-mysql
 product-properties:
   .properties.allow_lower_case_table_names_via_config_param:
@@ -92,20 +114,8 @@ product-properties:
     value: false
   .properties.wait_timeout:
     value: 28800
-network-properties:
-  network:
-    name: services
-  other_availability_zones:
-  - name: zone-1
-  - name: zone-2
-  - name: zone-3
-  service_network:
-    name: services
-  singleton_availability_zone:
-    name: zone-1
 resource-config:
   dedicated-mysql-broker:
-    max_in_flight: 1
     additional_networks: []
     additional_vm_extensions: []
     elb_names: []
@@ -113,16 +123,5 @@ resource-config:
       id: automatic
     instances: automatic
     internet_connected: false
+    max_in_flight: 1
     swap_as_percent_of_memory_size: automatic
-errand-config:
-  delete-all-service-instances-and-deregister-broker:
-    pre-delete-state: true
-  register-broker:
-    post-deploy-state: true
-  smoke-tests:
-    post-deploy-state: true
-  upgrade-all-service-instances:
-    post-deploy-state: true
-  validate-before-upgrade-instances:
-    post-deploy-state: true
-

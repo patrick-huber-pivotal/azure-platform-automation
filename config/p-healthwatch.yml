@@ -1,3 +1,21 @@
+errand-config:
+  delete-space:
+    pre-delete-state: true
+  push-apps:
+    post-deploy-state: true
+  smoke-tests:
+    post-deploy-state: true
+network-properties:
+  network:
+    name: services
+  other_availability_zones:
+  - name: zone-1
+  - name: zone-2
+  - name: zone-3
+  service_network:
+    name: services
+  singleton_availability_zone:
+    name: zone-1
 product-name: p-healthwatch
 product-properties:
   .healthwatch-forwarder.boshhealth_instance_count:
@@ -41,20 +59,8 @@ product-properties:
   .properties.syslog_selector:
     selected_option: inactive
     value: "No"
-network-properties:
-  network:
-    name: services
-  other_availability_zones:
-  - name: zone-1
-  - name: zone-2
-  - name: zone-3
-  service_network:
-    name: services
-  singleton_availability_zone:
-    name: zone-1
 resource-config:
   healthwatch-forwarder:
-    max_in_flight: 1
     additional_networks: []
     additional_vm_extensions: []
     elb_names: []
@@ -62,11 +68,11 @@ resource-config:
       id: automatic
     instances: automatic
     internet_connected: false
+    max_in_flight: 1
     persistent_disk:
       size_mb: automatic
     swap_as_percent_of_memory_size: automatic
   mysql:
-    max_in_flight: 1
     additional_networks: []
     additional_vm_extensions: []
     elb_names: []
@@ -74,11 +80,11 @@ resource-config:
       id: automatic
     instances: automatic
     internet_connected: false
+    max_in_flight: 1
     persistent_disk:
       size_mb: automatic
     swap_as_percent_of_memory_size: automatic
   redis:
-    max_in_flight: 1
     additional_networks: []
     additional_vm_extensions: []
     elb_names: []
@@ -86,14 +92,7 @@ resource-config:
       id: automatic
     instances: automatic
     internet_connected: false
+    max_in_flight: 1
     persistent_disk:
       size_mb: automatic
     swap_as_percent_of_memory_size: automatic
-errand-config:
-  delete-space:
-    pre-delete-state: true
-  push-apps:
-    post-deploy-state: true
-  smoke-tests:
-    post-deploy-state: true
-

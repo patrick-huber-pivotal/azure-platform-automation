@@ -1,0 +1,173 @@
+az-configuration:
+- name: zone-1
+  iaas_configuration_name: default
+  guid: 1385133de5b9b2f3d848
+  iaas_identifier: "1"
+- name: zone-2
+  iaas_configuration_name: default
+  guid: bdf29fa82594f870238c
+  iaas_identifier: "2"
+- name: zone-3
+  iaas_configuration_name: default
+  guid: a5485e97b5c9d00fd831
+  iaas_identifier: "3"
+iaas-configurations:
+- additional_cloud_properties: {}
+  availability_mode: ((iaas-configurations_0_availability_mode))
+  bosh_storage_account_name: ((iaas-configurations_0_bosh_storage_account_name))
+  client_id: ((iaas-configurations_0_client_id))
+  cloud_storage_type: ((iaas-configurations_0_cloud_storage_type))
+  deployed_cloud_storage_type: ((iaas-configurations_0_deployed_cloud_storage_type))
+  environment: ((iaas-configurations_0_environment))
+  name: ((iaas-configurations_0_name))
+  resource_group_name: ((iaas-configurations_0_resource_group_name))
+  ssh_public_key: ((iaas-configurations_0_ssh_public_key))
+  storage_account_type: ((iaas-configurations_0_storage_account_type))
+  subscription_id: ((iaas-configurations_0_subscription_id))
+  tenant_id: ((iaas-configurations_0_tenant_id))
+network-assignment:
+  network:
+    name: infrastructure
+  other_availability_zones: []
+  singleton_availability_zone:
+    name: zone-1
+networks-configuration:
+  icmp_checks_enabled: false
+  networks:
+  - name: infrastructure
+    subnets:
+    - iaas_identifier: dell-virtual-network/dell-infrastructure-subnet
+      cidr: 10.0.8.0/26
+      dns: 168.63.129.16
+      gateway: 10.0.8.1
+      reserved_ip_ranges: 10.0.8.1-10.0.8.9
+      availability_zone_names:
+      - zone-1
+      - zone-2
+      - zone-3
+  - name: pas
+    subnets:
+    - iaas_identifier: dell-virtual-network/dell-pas-subnet
+      cidr: 10.0.0.0/22
+      dns: 168.63.129.16
+      gateway: 10.0.0.1
+      reserved_ip_ranges: 10.0.0.1-10.0.0.9
+      availability_zone_names:
+      - zone-1
+      - zone-2
+      - zone-3
+  - name: services
+    subnets:
+    - iaas_identifier: dell-virtual-network/dell-services-subnet
+      cidr: 10.0.4.0/22
+      dns: 168.63.129.16
+      gateway: 10.0.4.1
+      reserved_ip_ranges: 10.0.4.1-10.0.4.9
+      availability_zone_names:
+      - zone-1
+      - zone-2
+      - zone-3
+  - name: pks
+    subnets:
+    - iaas_identifier: dell-virtual-network/dell-pks-subnet
+      cidr: 10.0.12.0/22
+      dns: 168.63.129.16
+      gateway: 10.0.12.1
+      reserved_ip_ranges: 10.0.12.0-10.0.12.9
+      availability_zone_names:
+      - zone-1
+      - zone-2
+      - zone-3
+  - name: pks-services
+    subnets:
+    - iaas_identifier: dell-virtual-network/dell-pks-services-subnet
+      cidr: 10.0.16.0/22
+      dns: 168.63.129.16
+      gateway: 10.0.16.1
+      reserved_ip_ranges: 10.0.16.0-10.0.16.9
+      availability_zone_names:
+      - zone-1
+      - zone-2
+      - zone-3
+properties-configuration:
+  director_configuration:
+    blobstore_type: local
+    bosh_recreate_on_next_deploy: false
+    bosh_recreate_persistent_disks_on_next_deploy: false
+    database_type: internal
+    director_worker_count: 5
+    encryption:
+      keys: []
+      providers: []
+    hm_emailer_options:
+      enabled: false
+    hm_pager_duty_options:
+      enabled: false
+    identification_tags: {}
+    job_configuration_on_tmpfs: false
+    keep_unreachable_vms: false
+    local_blobstore_options: {}
+    ntp_servers_string: 0.pool.ntp.org, 1.pool.ntp.org, 2.pool.ntp.org
+    post_deploy_enabled: true
+    resurrector_enabled: true
+    retry_bosh_deploys: true
+    skip_director_drain: false
+  dns_configuration:
+    excluded_recursors: []
+    handlers: []
+  security_configuration:
+    generate_vm_passwords: ((properties-configuration_security_configuration_generate_vm_passwords))
+    opsmanager_root_ca_trusted_certs: true
+    trusted_certificates: |
+      -----BEGIN CERTIFICATE-----
+      MIIEXTCCAsWgAwIBAgIQRhZqf3UGvw2bIkVoGQ5FBTANBgkqhkiG9w0BAQsFADA4
+      MQwwCgYDVQQGEwNVU0ExFjAUBgNVBAoTDUNsb3VkIEZvdW5kcnkxEDAOBgNVBAMT
+      B2Jvc2gtY2EwHhcNMTkxMjE2MTg1OTM1WhcNMjAxMjE1MTg1OTM1WjA4MQwwCgYD
+      VQQGEwNVU0ExFjAUBgNVBAoTDUNsb3VkIEZvdW5kcnkxEDAOBgNVBAMTB2Jvc2gt
+      Y2EwggGiMA0GCSqGSIb3DQEBAQUAA4IBjwAwggGKAoIBgQDUFVV601/8u43KL+AR
+      t/ER0vduoMFTthdPqnNaJkn2YqUQm7c+e8J8/VTZVzXNXnZGRN4wXUWeKmJG+qr2
+      Pmq2j9sieev/pif1nXsoljTqYE7PRjSRf83T2aUn9+wy+6tz49AowKxcKpMJ8u7E
+      sWf6BUTwbUBuzoi2j7ziSfjSjGSl3oOKJn+eeC1oobcs2hLmIx42pt14M7Wt+ntB
+      wPEqoJoHL5tYE9Lu0tZsLb3Nb9QHZflBiKEXeVdoisaiDEWRg+LSOILeO57sKAv3
+      yyhXN6JEmCgkohQ4bkTa1hziD1Hl5mgCuyf6Z7VtOJzgQ3a2DkAjJLfZ//QJdZgy
+      xyBbt8m9juO1dFrVL0pmZ67PGXasIPA6wu9CRJttV98ih4e/xMcIjNDofeAbC7lk
+      QhVULuWC3IaoLJiv5kkp/5STeOTHTPWqb6UELtMGO/gBTfD3sngSrcGHL6fdDTJh
+      gxQfLFBnuvahaUG/SKfoJOHBETggB2btDjXDJZpNNppQWpECAwEAAaNjMGEwDgYD
+      VR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFGbscngG2gye
+      gqpAq4eONxjXESdjMB8GA1UdIwQYMBaAFGbscngG2gyegqpAq4eONxjXESdjMA0G
+      CSqGSIb3DQEBCwUAA4IBgQBCFzaU4ndEE/MldCb6HlI9UEz5trdPwBxMWQFNlBai
+      gOpXvfw3A7J61bOGPaH3z8lBJwR3rk2PKQW7tYsWiGn6IT+neFP2Lod1YtUhqK22
+      OhlUFpEwsH80TsLr3KNGDZGYloMxYgYmQvVa/4qxFzQGXne3cT9wnpEJzjlHHp1z
+      HHyEuKzwIyZFt+XlflZ06X/omGnbD6c5aUWyBF9deo76pQOiyMslkLqc3F7rNWPx
+      7a2XCp4UfPLFrXQ2PHIqPniSMAIYs2oQ6Q9qXQlSHeCCXM9mHhwrxYSyHaduYQcc
+      o3UtNuqO0wpCy/UOL2qVLupptd4KahCDeoRiykGAdAJbQxIWzmHUQjmgPso7UjoW
+      b19fyT8plF28su2vZksBhcJ1sQRyxhjoyEyhmRILww5CWn+9SvWdk80qfXqapMzS
+      FaTpWUltOH24tAdhZUhekmNpSzb3y0KJbLT1WVJBiXef1RYXSNu9CXlAfx+w2gTY
+      LrVFv5OZTAsCQ/oYjK8FVes=
+      -----END CERTIFICATE-----
+  syslog_configuration:
+    enabled: false
+resource-configuration:
+  compilation:
+    additional_networks: []
+    additional_vm_extensions: []
+    elb_names: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    internet_connected: false
+    swap_as_percent_of_memory_size: automatic
+  director:
+    additional_networks: []
+    additional_vm_extensions: []
+    elb_names: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    internet_connected: false
+    persistent_disk:
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+vmextensions-configuration: []
+vmtypes-configuration: {}
+
