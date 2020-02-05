@@ -155,16 +155,13 @@ jobs:
       CONFIG_FILE: vars/products/p-healthwatch.yml 
     input_mapping:
       config: configuration
-    output_mapping: 
-      download-stemcell: healthwatch-stemcell 
-      download-product: healthwatch-product
   - in_parallel: 
     - put: healthwatch-product
       params:
-        file: download-product/*.pivotal
+        file: downloaded-product/*.pivotal
     - put: healthwatch-stemcell
       params:
-        file: healthwatch-stemcell/*.tgz
+        file: downloaded-stemcell/*.tgz
 
 - name: fetch-opsman
   plan:
@@ -184,7 +181,9 @@ jobs:
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
     params:
-      CONFIG_FILE: download-product/opsman.yml
+      CONFIG_FILE: vars/products/opsman.yml
+    input_mapping:
+      config: configuration
   - in_parallel:
     - put: opsman-product
       params:
