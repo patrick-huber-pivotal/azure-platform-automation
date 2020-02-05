@@ -18,7 +18,7 @@ prepare-tasks-with-secrets: &prepare-tasks-with-secrets
   file: platform-automation-tasks/tasks/prepare-tasks-with-secrets.yml
   params:
     VARS_PATHS: vars/vars
-    CONFIG_PATHS: config/download-product
+    CONFIG_PATHS: config/config
   input_mapping:
     tasks: platform-automation-tasks
     config: configuration
@@ -114,7 +114,7 @@ resources:
   source:
     api_token: ((pivnet_token))
     product_slug: platform-automation
-    product_version: 2\.(.*)
+    product_version: 4\.3\.(.*)
     sort_by: semver
 
 - name: platform-automation-tasks
@@ -152,7 +152,7 @@ jobs:
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
     params:
-      CONFIG_FILE: vars/products/healthwatch.yml 
+      CONFIG_FILE: vars/products/p-healthwatch.yml 
       SOURCE: azure
     input_mapping:
       config: configuration
