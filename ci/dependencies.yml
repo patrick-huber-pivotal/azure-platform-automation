@@ -7,11 +7,11 @@ credhub-interpolate: &credhub-interpolate
     CREDHUB_SERVER: ((credhub-server))
     CREDHUB_CA_CERT: ((credhub-ca-cert))
     PREFIX: '/concourse/main'
-    INTERPOLATION_PATHS: "download-product"
+    INTERPOLATION_PATHS: "vars config"
   input_mapping:
-    files: config
+    files: configuration
   output_mapping:
-    interpolated-files: config
+    interpolated-files: configuration
 
 prepare-tasks-with-secrets: &prepare-tasks-with-secrets
   image: platform-automation-image
@@ -146,8 +146,8 @@ jobs:
       params:
         unpack: true
     - get: configuration
-  - task: prepare-tasks-with-secrets
-    <<: *prepare-tasks-with-secrets
+  - task: credhub-interpolate
+    <<: *credhub-interpolate
   - task: download-product-healthwatch-product-and-stemcell
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
