@@ -1,0 +1,144 @@
+credhub-interpolate: &credhub-interpolate
+  image: platform-automation-image
+  file: platform-automation-tasks/tasks/credhub-interpolate.yml
+  params:
+    CREDHUB_CLIENT: ((credhub-client))
+    CREDHUB_SECRET: ((credhub-secret))
+    CREDHUB_SERVER: ((credhub-server))
+    CREDHUB_CA_CERT: ((credhub-ca-cert))
+    PREFIX: '/concourse/main'
+    INTERPOLATION_PATHS: "download-product"
+  input_mapping:
+    files: config
+  output_mapping:
+    interpolated-files: config
+
+resources:
+- name: schedule
+  type: time
+  source: 
+    interval: 24h
+  
+jobs:
+- name: fetch-healthwatch
+  plan: 
+  - aggregate:
+    - get: schedule
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    <<: *credhub-interpolate
+  - task: download-product-healthwatch-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: products/healthwatch.yml 
+    output_mapping: 
+      download-stemcell: healthwatch-stemcell 
+  - aggregate: 
+    - put: healthwatch-product
+      params:
+        file: download-product/*.pivotal
+    - put: healthwatch-stemcell
+      params:
+        file: healthwatch-stemcell/*.tgz
+
+- name: fetch-opsman
+  plan:
+  - aggregate:
+    - get: daily
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    <<: *credhub-interpolate
+  - task: download-opsman-image
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: download-product/opsman.yml
+  - aggregate:
+    - put: opsman-product
+      params:
+        file: downloaded-product/*
+
+- name: fetch-pas
+  plan:
+  - aggregate:
+    - get: daily
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    <<: *credhub-interpolate
+  - task: download-pas-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: download-product/pas.yml
+    output_mapping: {downloaded-stemcell: pas-stemcell}
+  - aggregate:
+    - put: pas-product
+      params:
+        file: downloaded-product/*.pivotal
+    - put: pas-stemcell
+      params:
+        file: pas-stemcell/*.tgz
+
+- name: fetch-pks
+  plan:
+  - aggregate:
+      - get: daily
+        trigger: true
+      - get: platform-automation-image
+        params:
+          unpack: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: config
+  - task: credhub-interpolate
+    <<: *credhub-interpolate
+  - task: download-pks-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: download-product/pks.yml
+    output_mapping: {downloaded-stemcell: pks-stemcell}
+  - aggregate:
+      - put: pks-product
+        params:
+          file: downloaded-product/*.pivotal
+      - put: pks-stemcell
+        params:
+          file: pks-stemcell/*.tgz
+
+- name: fetch-platform-automation
+  # We use the pivnet resource to bootstrap the pipeline,
+  # and because this product is part of the pipeline, not the foundation
+  plan:
+  - get: platform-automation-pivnet
+    trigger: true
+  - aggregate:
+    - put: platform-automation-tasks
+      params:
+        file: platform-automation-pivnet/*tasks*.zip
+    - put: platform-automation-image
+      params:
+        file: platform-automation-pivnet/*image*.tgz
