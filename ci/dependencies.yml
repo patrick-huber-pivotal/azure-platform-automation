@@ -153,7 +153,6 @@ jobs:
     file: platform-automation-tasks/tasks/download-product.yml
     params:
       CONFIG_FILE: vars/products/p-healthwatch.yml 
-      SOURCE: azure
     input_mapping:
       config: configuration
     output_mapping: 
