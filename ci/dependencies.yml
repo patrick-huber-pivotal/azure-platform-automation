@@ -207,15 +207,16 @@ jobs:
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
     params:
-      CONFIG_FILE: download-product/pas.yml
-    output_mapping: {downloaded-stemcell: pas-stemcell}
+      CONFIG_FILE: vars/products/cf.yml
+    input_mapping:
+      config: configuration
   - in_parallel:
     - put: pas-product
       params:
         file: downloaded-product/*.pivotal
     - put: pas-stemcell
       params:
-        file: pas-stemcell/*.tgz
+        file: downloaded-stemcell/*.tgz
 
 - name: fetch-pks
   plan:
