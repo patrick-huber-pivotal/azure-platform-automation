@@ -13,16 +13,130 @@ credhub-interpolate: &credhub-interpolate
   output_mapping:
     interpolated-files: config
 
+prepare-tasks-with-secrets: &prepare-tasks-with-secrets
+  image: platform-automation-image
+  file: platform-automation-tasks/tasks/prepare-tasks-with-secrets.yml
+  params:
+    VARS_PATHS: vars/vars
+    CONFIG_PATHS: config/download-product
+  input_mapping:
+    tasks: platform-automation-tasks
+    config: configuration
+    vars: configuration
+  output_mapping:
+    tasks: platform-automation-tasks
+
+resource_types:
+- name: azure-blobstore
+  type: docker-image
+  source:
+    repository: pcfabr/azure-blobstore-resource
+
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tag: latest-final
+
 resources:
 - name: schedule
   type: time
   source: 
     interval: 24h
-  
+
+- name: configuration
+  type: git
+  source:
+    private_key: ((git_private_key.private_key))
+    uri: ((source-repo))
+    branch: master
+    submodules: all
+    depth: 1
+
+- name: healthwatch-product
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: \[p-healthwatch,(.*)\:p-healthwatch-.*.pivotal
+
+- name: healthwatch-stemcell
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: healthwatch-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
+
+- name: opsman-product
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: \[ops-manager,(.*)\].*.ova
+
+- name: pas-product
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: \[elastic-runtime,(.*)\]cf-.*.pivotal
+
+- name: pas-stemcell
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: pas-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
+
+- name: pks-product
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: \[pivotal-container-service,(.*)\]pivotal-container-service-.*.pivotal
+
+- name: pks-stemcell
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: pks-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
+
+- name: platform-automation-pivnet
+  type: pivnet
+  source:
+    api_token: ((pivnet_token))
+    product_slug: platform-automation
+    product_version: 2\.(.*)
+    sort_by: semver
+
+- name: platform-automation-tasks
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: platform-automation-tasks-(.*).zip
+
+- name: platform-automation-image
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: platform-automation-image-(.*).tgz
+
 jobs:
 - name: fetch-healthwatch
   plan: 
-  - aggregate:
+  - in_parallel:
     - get: schedule
       trigger: true
     - get: platform-automation-image
@@ -31,17 +145,21 @@ jobs:
     - get: platform-automation-tasks
       params:
         unpack: true
-    - get: config
-  - task: credhub-interpolate
-    <<: *credhub-interpolate
+    - get: configuration
+  - task: prepare-tasks-with-secrets
+    <<: *prepare-tasks-with-secrets
   - task: download-product-healthwatch-product-and-stemcell
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
     params:
-      CONFIG_FILE: products/healthwatch.yml 
+      CONFIG_FILE: vars/products/healthwatch.yml 
+      SOURCE: azure
+    input_mapping:
+      config: configuration
     output_mapping: 
       download-stemcell: healthwatch-stemcell 
-  - aggregate: 
+      download-product: healthwatch-product
+  - in_parallel: 
     - put: healthwatch-product
       params:
         file: download-product/*.pivotal
@@ -51,8 +169,8 @@ jobs:
 
 - name: fetch-opsman
   plan:
-  - aggregate:
-    - get: daily
+  - in_parallel:
+    - get: schedule
       trigger: true
     - get: platform-automation-image
       params:
@@ -60,7 +178,7 @@ jobs:
     - get: platform-automation-tasks
       params:
         unpack: true
-    - get: config
+    - get: configuration
   - task: credhub-interpolate
     <<: *credhub-interpolate
   - task: download-opsman-image
@@ -68,15 +186,15 @@ jobs:
     file: platform-automation-tasks/tasks/download-product.yml
     params:
       CONFIG_FILE: download-product/opsman.yml
-  - aggregate:
+  - in_parallel:
     - put: opsman-product
       params:
         file: downloaded-product/*
 
 - name: fetch-pas
   plan:
-  - aggregate:
-    - get: daily
+  - in_parallel:
+    - get: schedule
       trigger: true
     - get: platform-automation-image
       params:
@@ -84,7 +202,7 @@ jobs:
     - get: platform-automation-tasks
       params:
         unpack: true
-    - get: config
+    - get: configuration
   - task: credhub-interpolate
     <<: *credhub-interpolate
   - task: download-pas-product-and-stemcell
@@ -93,7 +211,7 @@ jobs:
     params:
       CONFIG_FILE: download-product/pas.yml
     output_mapping: {downloaded-stemcell: pas-stemcell}
-  - aggregate:
+  - in_parallel:
     - put: pas-product
       params:
         file: downloaded-product/*.pivotal
@@ -103,8 +221,8 @@ jobs:
 
 - name: fetch-pks
   plan:
-  - aggregate:
-      - get: daily
+  - in_parallel:
+      - get: schedule
         trigger: true
       - get: platform-automation-image
         params:
@@ -112,7 +230,7 @@ jobs:
       - get: platform-automation-tasks
         params:
           unpack: true
-      - get: config
+      - get: configuration
   - task: credhub-interpolate
     <<: *credhub-interpolate
   - task: download-pks-product-and-stemcell
@@ -121,7 +239,7 @@ jobs:
     params:
       CONFIG_FILE: download-product/pks.yml
     output_mapping: {downloaded-stemcell: pks-stemcell}
-  - aggregate:
+  - in_parallel:
       - put: pks-product
         params:
           file: downloaded-product/*.pivotal
@@ -135,7 +253,7 @@ jobs:
   plan:
   - get: platform-automation-pivnet
     trigger: true
-  - aggregate:
+  - in_parallel:
     - put: platform-automation-tasks
       params:
         file: platform-automation-pivnet/*tasks*.zip
