@@ -75,7 +75,7 @@ resources:
     storage_account_key: ((storage_account_key))
     container: ((container))
     storage_account_name: ((storage_account_name))
-    regexp: \[ops-manager,(.*)\].*.ova
+    regexp: \[ops-manager,(.*)\].*.yml 
 
 - name: pas-product
   type: azure-blobstore
@@ -236,15 +236,16 @@ jobs:
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
     params:
-      CONFIG_FILE: download-product/pks.yml
-    output_mapping: {downloaded-stemcell: pks-stemcell}
+      CONFIG_FILE: vars/products/pivotal-container-service.yml
+    input_mapping:
+      config: configuration
   - in_parallel:
       - put: pks-product
         params:
           file: downloaded-product/*.pivotal
       - put: pks-stemcell
         params:
-          file: pks-stemcell/*.tgz
+          file: downloaded-stemcell/*.tgz
 
 - name: fetch-platform-automation
   # We use the pivnet resource to bootstrap the pipeline,
