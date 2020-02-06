@@ -4,3 +4,4 @@ pivnet-file-glob: "pivotal-container-service*.pivotal"
 pivnet-product-slug: pivotal-container-service
 product-version-regex: ^1\.3\..*$
 stemcell-iaas: azure
+blobstore-bucket: bucket
