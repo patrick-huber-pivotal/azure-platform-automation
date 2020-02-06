@@ -4,3 +4,4 @@ pivnet-file-glob: "cf-*.pivotal"
 pivnet-product-slug: elastic-runtime
 product-version-regex: ^2\.6\..*$
 stemcell-iaas: azure
+blobstore-bucket: bucket

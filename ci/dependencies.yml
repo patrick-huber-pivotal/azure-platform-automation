@@ -67,7 +67,7 @@ resources:
     storage_account_key: ((storage_account_key))
     container: ((container))
     storage_account_name: ((storage_account_name))
-    regexp: healthwatch-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
+    regexp: healthwatch-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-azure-hyperv.*\.tgz
 
 - name: opsman-product
   type: azure-blobstore
@@ -91,7 +91,7 @@ resources:
     storage_account_key: ((storage_account_key))
     container: ((container))
     storage_account_name: ((storage_account_name))
-    regexp: pas-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
+    regexp: pas-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-azure-hyperv.*\.tgz
 
 - name: pks-product
   type: azure-blobstore
@@ -107,7 +107,7 @@ resources:
     storage_account_key: ((storage_account_key))
     container: ((container))
     storage_account_name: ((storage_account_name))
-    regexp: pks-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
+    regexp: pks-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-azure-hyperv.*\.tgz
 
 - name: platform-automation-pivnet
   type: pivnet
