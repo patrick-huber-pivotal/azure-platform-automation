@@ -62,19 +62,13 @@ if [ "$product_slug" == "pas-windows" ] && [ "$SOURCE" == "pivnet" ]; then
 fi
 
 echo "uploading product to ${TARGET}"
-om --env env/"${ENV_FILE}" upload-product \
-  --product $product_file
+case $TARGET in
+esac
 
-if [ -e "$stemcell_file" ]; then
-
-  export OPTIONAL_CONFIG_FLAG=""
-  if [ -e downloaded-files/assign-stemcell.yml ]; then
-    export OPTIONAL_CONFIG_FLAG="--config downloaded-files/config.yml"
-  fi
-
-  echo "uploading stemcell to ${TARGET}"
-  om --env env/"${ENV_FILE}" upload-stemcell \
-   --floating="$FLOATING_STEMCELL" \
-   --stemcell=$stemcell_file \
-   $OPTIONAL_CONFIG_FLAG
+if [ -ne "$stemcell_file" ]; then
+    exit 0
 fi
+
+echo "uploading stemcell to ${TARGET}"
+case $TARGET in
+esac

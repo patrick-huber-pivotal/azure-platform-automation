@@ -87,6 +87,8 @@ jobs:
       input_mapping:
         env: configuration
         stemcell: healthwatch-stemcell
+      params:
+        ENV_FILE: env/env.yml
 
 - name: configure-healthwatch
   serial: true
