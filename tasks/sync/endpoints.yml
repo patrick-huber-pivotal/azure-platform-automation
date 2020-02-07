@@ -1,0 +1,45 @@
+endpoints:
+- name: pivnet
+  type: pivnet
+  params:
+    pivnet-api-token: ((pivnet_token))
+    pivnet-file-glob: "*.pivotal"
+    pivnet-product-slug: elastic-runtime
+    product-version: 1.2.3
+# Optional
+#    pivnet-disable-ssl: false
+#    stemcell-iaas: google
+
+- name: s3
+  type: s3
+  params:
+    s3-access-key-id: ((s3_access_key_id))
+    s3-secret-access-key: ((s3_secret_access_key))
+    s3-region-name: ((s3_region_name))
+# Optional
+#    blobstore-product-path: /path/to/product    # default - root path of bucket
+#    blobstore-stemcell-path: /path/to/stemcell  # default - root path of bucket
+#    s3-disable-ssl: true                        # default - false
+#    s3-enable-v2-signing: true                  # available for compatibility
+#    s3-auth-type: iam                           # default - accesskey
+#    s3-endpoint: s3.endpoint.com                # required if NOT using AWS S3
+
+- name: azure
+  type: auzre
+  params:
+    azure-storage-account: ((azure_storage_account_name))
+    azure-storage-key: ((azure_storage_account_key))
+    blobstore-bucket: ((azure_storage_container_name))
+# Optional
+#    blobstore-product-path: /path/to/product    # default - root path of bucket
+#    blobstore-stemcell-path: /path/to/stemcell  # default - root path of bucket
+
+- name: gcs
+  type: gcs
+  params: 
+    blobstore-bucket: bucket-name
+    gcs-project-id: ((gcs_project_id))
+    gcs-service-account-json: ((gcs_service_account_json))
+# Optional
+#     blobstore-product-path: /path/to/product    # default - root path of bucket
+#     blobstore-stemcell-path: /path/to/stemcell  # default - root path of bucket

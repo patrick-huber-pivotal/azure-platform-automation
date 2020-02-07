@@ -1,0 +1,8 @@
+- task: sync-healthwatch
+  image: platform-automation-image
+  file: azure-platform-automation/tasks/sync.yml
+  input_mapping:
+    config: configuration
+  params:
+    SOURCE: pivnet
+    TARGET: azure

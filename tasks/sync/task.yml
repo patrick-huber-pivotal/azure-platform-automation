@@ -1,0 +1,23 @@
+---
+platform: linux
+
+inputs:
+# - contains the product endpoint configuration file 
+# - see endpoints.yml for example configuration
+- name: config 
+
+params:
+  # - Required
+  # - name of the source
+  SOURCE:
+
+  # - Required
+  # - name of the target
+  TARGET:
+
+  # - Required 
+  # - path to the config file
+  # - path is relative to the root of `config` input
+  CONFIG:
+run:
+  path: azure-platform-automation/tasks/sync.sh
