@@ -2,7 +2,7 @@
 pivnet-api-token: ((pivnet_token))
 pivnet-file-glob: "*.pivotal"
 pivnet-product-slug: p-healthwatch
-product-version: 1.8.0
+product-version: 1.7.1
 stemcell-iaas: azure
 blobstore-bucket: ((storage_account_container))
 blobstore-stemcell-path: healthwatch-stemcell
