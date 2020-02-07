@@ -8,7 +8,7 @@ credhub-interpolate: &credhub-interpolate
     CREDHUB_SERVER: ((credhub-server))
     CREDHUB_CA_CERT: ((credhub-ca-cert))
     PREFIX: '/concourse/main'
-    INTERPOLATION_PATHS: "vars config"
+    INTERPOLATION_PATHS: "vars config env"
   input_mapping:
     files: configuration
   output_mapping:
