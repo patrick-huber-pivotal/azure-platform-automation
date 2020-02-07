@@ -1,0 +1,116 @@
+  
+credhub-interpolate: &credhub-interpolate
+  image: platform-automation-image
+  file: platform-automation-tasks/tasks/credhub-interpolate.yml
+  params:
+    CREDHUB_CLIENT: ((credhub-client))
+    CREDHUB_SECRET: ((credhub-secret))
+    CREDHUB_SERVER: ((credhub-server))
+    CREDHUB_CA_CERT: ((credhub-ca-cert))
+    PREFIX: '/concourse/main'
+    INTERPOLATION_PATHS: "vars config"
+  input_mapping:
+    files: configuration
+  output_mapping:
+    interpolated-files: configuration
+resource_types:
+- name: azure-blobstore
+  type: docker-image
+  source:
+    repository: pcfabr/azure-blobstore-resource
+
+resources:
+- name: configuration
+  type: git
+  source:
+    private_key: ((git_private_key.private_key))
+    uri: ((source-repo))
+    branch: master
+    submodules: all
+    depth: 1
+
+- name: platform-automation-tasks
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: platform-automation-tasks-(.*).zip
+
+- name: platform-automation-image
+  type: azure-blobstore
+  source:
+    storage_account_key: ((storage_account_key))
+    container: ((container))
+    storage_account_name: ((storage_account_name))
+    regexp: platform-automation-image-(.*).tgz
+
+jobs:
+- name: upload-and-stage-healthwatch
+  serial: true
+  plan:
+    - in_parallel:
+      - get: platform-automation-image
+        params:
+          unpack: true
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: configuration
+    - task: credhub-interpolate
+      <<: *credhub-interpolate
+    - task: download-healthwatch
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      params:
+        CONFIG_FILE: vars/products/p-healthwatch.yml
+        SOURCE: azure
+      input_mapping:
+        config: configuration
+      output_mapping:
+        downloaded-product: healthwatch-product
+        downloaded-stemcell: healthwatch-stemcell
+    - task: upload-and-stage-product
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+      input_mapping:
+        product: healthwatch-product
+        env: configuration
+        config: configuration
+      params:
+        ENV_FILE: env/env.yml
+        CONFIG_FILE: config/p-healthwatch.yml
+    - task: upload-healthwatch-stemcell
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/upload-stemcell.yml
+      input_mapping:
+        env: configuration
+        stemcell: healthwatch-stemcell
+
+- name: configure-healthwatch
+  serial: true
+  serial_groups: [ install ]
+  plan:
+    - in_parallel:
+        - get: platform-automation-image
+          params:
+            unpack: true
+          passed:
+            - upload-and-stage-healthwatch
+          trigger: true
+        - get: platform-automation-tasks
+          params:
+            unpack: true
+        - get: configuration
+    - task: credhub-interpolate
+      <<: *credhub-interpolate
+    - task: configure-healthwatch
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/configure-product.yml
+      input_mapping:
+        config: configuration
+        env: configuration
+      params:
+        CONFIG_FILE: healthwatch.yml
+

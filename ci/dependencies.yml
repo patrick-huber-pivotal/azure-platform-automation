@@ -22,7 +22,6 @@ prepare-tasks-with-secrets: &prepare-tasks-with-secrets
   input_mapping:
     tasks: platform-automation-tasks
     config: configuration
-    vars: configuration
   output_mapping:
     tasks: platform-automation-tasks
 
@@ -59,7 +58,7 @@ resources:
     storage_account_key: ((storage_account_key))
     container: ((container))
     storage_account_name: ((storage_account_name))
-    regexp: \[p-healthwatch,(.*)\:p-healthwatch-.*.pivotal
+    regexp: \[p-healthwatch,(.*)\]p-healthwatch-.*.pivotal
 
 - name: healthwatch-stemcell
   type: azure-blobstore
