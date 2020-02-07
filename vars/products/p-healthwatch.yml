@@ -5,5 +5,6 @@ pivnet-product-slug: p-healthwatch
 product-version: 1.4.4
 stemcell-iaas: azure
 blobstore-bucket: ((storage_account_container))
+blobstore-stemcell-path: healthwatch-stemcell
 azure-storage-account: ((storage_account_name))
 azure-storage-key: ((storage_account_key))
