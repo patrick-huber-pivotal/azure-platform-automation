@@ -13,6 +13,7 @@ credhub-interpolate: &credhub-interpolate
     files: configuration
   output_mapping:
     interpolated-files: configuration
+
 resource_types:
 - name: azure-blobstore
   type: docker-image
@@ -80,7 +81,6 @@ jobs:
         config: configuration
       params:
         ENV_FILE: env/env.yml
-        CONFIG_FILE: config/p-healthwatch.yml
     - task: upload-healthwatch-stemcell
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upload-stemcell.yml
