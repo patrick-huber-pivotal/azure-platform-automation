@@ -1,0 +1,9 @@
+memory-limit: 4G
+instance-memory-limit: 1G
+total-routes: "20"
+total-services: "20"
+paid-service-plans-allowed: true
+total_reserved_route_ports: unlimited
+total_service_keys: unlimited
+app_instance_limit: unlimited
+app_task_limit: "5"

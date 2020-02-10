@@ -1,0 +1,4 @@
+org: tools
+spaces:
+- lab
+enable-delete-spaces: true

@@ -1,0 +1,4 @@
+org: Pivotal_Lab
+spaces:
+- Poovan_Space
+enable-delete-spaces: true

@@ -1,0 +1,40 @@
+enable-delete-isolation-segments: false
+enable-unassign-security-groups: false
+running-security-groups:
+- default_security_group
+staging-security-groups:
+- default_security_group
+shared-domains:
+  apps.dell.azure.pivotal.rocks:
+    internal: false
+  apps.internal:
+    internal: true
+enable-remove-shared-domains: true
+metadata-prefix: cf-mgmt.pivotal.io
+enable-service-access: true
+ignore-legacy-service-access: false
+service-access:
+- broker: app-autoscaler
+  services:
+  - service: app-autoscaler
+    all_access_plans:
+    - standard
+- broker: nfsbroker
+  services:
+  - service: nfs
+    no_access_plans:
+    - Existing
+  - service: nfs-legacy
+    no_access_plans:
+    - Existing
+- broker: smbbroker
+  services:
+  - service: smb
+    no_access_plans:
+    - Existing
+- broker: dedicated-mysql-broker
+  services:
+  - service: p.mysql
+    all_access_plans:
+    - db-small
+protected-users: []
